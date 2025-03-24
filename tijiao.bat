@@ -1,2 +1,5 @@
+ï»¿echo off
+cd D:\å¤‡ä»½\wcl\wanchenglv
 git add .
-git commit -m "¸üÐÂ"
+git commit -m "æ›´æ–°"
+pause
