@@ -1,5 +1,5 @@
-锘縠cho off
-cd D:\澶囦唤\wcl\wanchenglv
+echo off
+cd D:\备份\wcl\wanchenglv
 git add .
-git commit -m "鏇存柊"
+git commit -m "更新"
 pause
