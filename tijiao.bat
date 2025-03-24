@@ -1,7 +1,7 @@
 
 cd D:\备份\wcl\wanchenglv
 git add .
-timeout -t 5
+timeout -t 1
 git commit -m "更新"
-timeout -t 5
-pause
+timeout -t 1
+git push origin main 
