@@ -1,4 +1,4 @@
-@echo off
+
 cd D:\±¸·Ý\wcl\wanchenglv
 git add .
 timeout -t 5
