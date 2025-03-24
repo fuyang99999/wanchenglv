@@ -1,3 +1,105 @@
-﻿<html>
-使用加速器。使用cmd命令运行提交 bat 不用在一个文件夹
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据排名表</title>
+    <style>
+        /* 保持原有样式不变 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 300px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        @media (max-width: 600px) {
+            th, td {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            
+            .table-container {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>姓名</th>
+                    <th>完成率</th>
+                    <th>组别</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- 数据将由JavaScript动态插入 -->
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    fetch('data.txt')
+        .then(response => response.text())
+        .then(data => {
+            const tbody = document.getElementById('tableBody');
+            const lines = data.split('\n').filter(line => line.trim() !== '');
+
+            lines.forEach(line => {
+                const cleanLine = line.replace(/[\[\]']/g, '');
+                const [rank, rate, name, group] = cleanLine.split(', ');
+                
+                // 修改此处完成率格式转换
+                const percentage = (Number(rate) * 100).toFixed(2) + '%';  // 新增转换逻辑
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${rank}</td>
+                    <td>${name}</td>
+                    <td>${percentage}</td>  <!-- 应用转换后的值 -->
+                    <td>${group}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+</script>
+
+</body>
 </html>
