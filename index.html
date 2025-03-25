@@ -1,105 +1,135 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>排名</title>
-    <style>
-        /* 保持原有样式不变 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>排名</title>
+<style>
+/* 原有样式保持不变 */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: Arial, sans-serif;
+}
 
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            padding: 10px;
-        }
+.table-container {
+width: 100%;
+overflow-x: auto;
+padding: 10px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 300px;
-        }
+table {
+width: 100%;
+border-collapse: collapse;
+min-width: 300px;
+}
 
-        th, td {
-            padding: 12px 15px;
-            text-align: center;
-            border: 1px solid #ddd;
-            font-size: 14px;
-        }
+th, td {
+padding: 12px 15px;
+text-align: center;
+border: 1px solid #ddd;
+font-size: 14px;
+}
 
-        th {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-        }
+th {
+background-color: #4CAF50;
+color: white;
+font-weight: bold;
+}
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+tr:nth-child(even) {
+background-color: #f9f9f9;
+}
 
-        tr:hover {
-            background-color: #f1f1f1;
-        }
+tr:hover {
+background-color: #f1f1f1;
+}
 
-        @media (max-width: 600px) {
-            th, td {
-                padding: 8px 10px;
-                font-size: 13px;
-            }
-            
-            .table-container {
-                padding: 5px;
-            }
-        }
-    </style>
+/* 新增更新时间样式 */
+.update-time {
+text-align: right;
+padding: 10px 20px;
+color: #666;
+font-size: 12px;
+font-style: italic;
+}
+
+@media (max-width: 600px) {
+th, td {
+padding: 8px 10px;
+font-size: 13px;
+}
+
+.table-container {
+padding: 5px;
+}
+
+.update-time {
+padding: 8px 10px;
+font-size: 11px;
+}
+}
+</style>
 </head>
 <body>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>排名</th>
-                    <th>姓名</th>
-                    <th>完成率</th>
-                    <th>组别</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- 数据将由JavaScript动态插入 -->
-            </tbody>
-        </table>
-    </div>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>排名</th>
+<th>姓名</th>
+<th>完成率</th>
+<th>组别</th>
+</tr>
+</thead>
+<tbody id="tableBody">
+<!-- 数据将由JavaScript动态插入 -->
+</tbody>
+</table>
+</div>
+<div class="update-time" id="updateTime"></div>
 
 <script>
-    fetch('data.txt')
-        .then(response => response.text())
-        .then(data => {
-            const tbody = document.getElementById('tableBody');
-            const lines = data.split('\n').filter(line => line.trim() !== '');
+fetch('data.txt')
+.then(response => response.text())
+.then(data => {
+const tbody = document.getElementById('tableBody');
+const lines = data.split('\n').filter(line => line.trim() !== '');
+let updateTime = '';
 
-            lines.forEach(line => {
-                const cleanLine = line.replace(/[\[\]']/g, '');
-                const [rank, rate, name, group] = cleanLine.split(', ');
-                
-                // 修改此处完成率格式转换
-                const percentage = (Number(rate) * 100).toFixed(2) + '%';  // 新增转换逻辑
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${rank}</td>
-                    <td>${name}</td>
-                    <td>${percentage}</td>  <!-- 应用转换后的值 -->
-                    <td>${group}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        })
+// 分离数据行和更新时间
+const processedLines = lines.filter(line => {
+if (line.startsWith('更新时间：')) {
+updateTime = line.replace('更新时间：', '').trim();
+return false;
+}
+return true;
+});
+
+// 插入更新时间
+if (updateTime) {
+document.getElementById('updateTime').textContent = `更新时间：${updateTime}`;
+}
+
+// 处理数据行
+processedLines.forEach(line => {
+const cleanLine = line.replace(/[\[\]']/g, '');
+const [rank, rate, name, group] = cleanLine.split(', ');
+
+// 转换完成率格式
+const percentage = (Number(rate) * 100).toFixed(2) + '%';
+
+const tr = document.createElement('tr');
+tr.innerHTML = `
+<td>${rank}</td>
+<td>${name}</td>
+<td>${percentage}</td>
+<td>${group}</td>
+`;
+tbody.appendChild(tr);
+});
+})
 </script>
-
 </body>
 </html>
